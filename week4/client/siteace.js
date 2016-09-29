@@ -1,4 +1,48 @@
 	/////
+	// Routing
+	/////
+
+	//Macro Template
+	Router.configure({
+		layoutTemplate: "ApplicationLayout"
+	});
+
+
+	Router.route('/', function () {
+	  this.render('welcome', {
+	    to:"main"
+	  });
+	});
+
+
+	Router.route('/webs', function () {
+	  this.render('navbar', {
+	  	to:"navbar"
+	  });
+	  this.render('website_form', {
+	  	to:"first_line"
+	  });
+	  this.render('website_list', {
+	  	to:"main"
+	  });
+	});
+
+
+	Router.route('/detail/:_id', function () {
+	  this.render('navbar', {
+	  	to:"navbar"
+	  });
+	  this.render('detail', {
+	  	to:"main",
+	    data: function () {
+	    	return Items.findOne({_id: this.params._id});
+	    }
+	  });
+	});
+
+
+
+	/////
 	// template helpers 
 	/////
 
@@ -67,9 +111,15 @@
 
 			// here is an example of how to get the url out of the form:
 			var url = event.target.url.value;
-			console.log("The url they entered is: "+url);
+			var title = event.target.title.value;
+			var descrip = event.target.description.value;
 			
-			//  put your website saving code in here!	
+			Websites.insert({
+	    		title: title, 
+	    		url: url, 
+	    		description: descrip, 
+	    		createdOn:new Date()
+	    	});	
 
 			return false;// stop the form submit from reloading the page
 
