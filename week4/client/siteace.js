@@ -1,10 +1,28 @@
-Websites = new Mongo.Collection("websites");
-
-if (Meteor.isClient) {
-
 	/////
 	// template helpers 
 	/////
+
+	// helper function that returns logged user
+	Template.body.helpers({
+		username:function(){
+			if (Meteor.user()) {
+				return Meteor.user().emails[0].address;
+			}
+			else{
+				return "Anonymous"
+			}
+		}
+	});
+
+	// helper function that returns IF user is logged
+	Template.body.helpers({
+		currentUser:function(){
+			if (Meteor.user()) {
+				return true;
+			}
+			else{return false;} //Check with videos
+		}
+	});
 
 	// helper function that returns all available websites
 	Template.website_list.helpers({
@@ -57,39 +75,5 @@ if (Meteor.isClient) {
 
 		}
 	});
-}
 
 
-if (Meteor.isServer) {
-	// start up function that creates entries in the Websites databases.
-  Meteor.startup(function () {
-    // code to run on server at startup
-    if (!Websites.findOne()){
-    	console.log("No websites yet. Creating starter data.");
-    	  Websites.insert({
-    		title:"Goldsmiths Computing Department", 
-    		url:"http://www.gold.ac.uk/computing/", 
-    		description:"This is where this course was developed.", 
-    		createdOn:new Date()
-    	});
-    	 Websites.insert({
-    		title:"University of London", 
-    		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route", 
-    		description:"University of London International Programme.", 
-    		createdOn:new Date()
-    	});
-    	 Websites.insert({
-    		title:"Coursera", 
-    		url:"http://www.coursera.org", 
-    		description:"Universal access to the world’s best education.", 
-    		createdOn:new Date()
-    	});
-    	Websites.insert({
-    		title:"Google", 
-    		url:"http://www.google.com", 
-    		description:"Popular search engine.", 
-    		createdOn:new Date()
-    	});
-    }
-  });
-}
