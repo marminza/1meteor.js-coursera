@@ -1,4 +1,13 @@
 /* CSS declarations go here */
+
+body{
+	padding-top: 70px; /* To avoid be under navbar */
+}
+
 .hidden_div{
 	display:none;
+}
+
+.navbar-body{
+	padding: 15px; /* padding horizontal no funciona */
 }

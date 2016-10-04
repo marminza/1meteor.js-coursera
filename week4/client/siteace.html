@@ -17,25 +17,32 @@
 <template name="welcome">
 	<div class="container">
 		<div class="jumbotron">
-			<h1> Welcome to Minguez Site</h1>
-			<a href="/webs" class="btn btn-info"> ENTER </a>
-
+			<h1> Welcome to Minguez Site</h1><br>
+			<a href="/webs" class="btn btn-success btn-lg"> ENTER </a>
 		</div>
+		<footer>
+			<p> Powered by <a href="#">Coursera</a>. - Meteor.js -Course Date: October of 2016</p>
+		</footer>
 
 	</div>
 </template>
 
 <template name="navbar">
-	<nav class="navbar navbar-default">
+	<nav class="navbar navbar-default navbar-fixed-top">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
 	      	<a class="navbar-brand" href="#">
-	        	<!--{{> username}}--> Site ace
+	        	{{> loginButtons}}
 	      	</a>
+	    </div>
+	    <vr></vr> <!-- NOT WORKING --> 
+	    <div class="navbar-body">
 	      	<a href="/">
 	      		<span class="glyphicon glyphicon-home" aria-hidden="true">Home</span>
 	      	</a>
-	    	<div class="pull-right btn-info">{{> loginButtons}}</div>
+	      	<a href="/webs">
+	      		<span class="glyphicon glyphicon-papers" aria-hidden="true">Websides</span>
+	      	</a>
 	    </div>
 	  </div>
 	</nav>
@@ -43,10 +50,11 @@
 
 
 <template name="website_form">
-	
+	{{#if currentUser}}
 		<a class="btn btn-warning js-toggle-website-form" href="#">
 	  		<span class="glyphicon glyphicon-plus" aria-hidden="true"> ADD URL</span>
 		</a>
+	{{/if}}
 		<div id="website_form" class="hidden_div">
 			<form class="js-save-website-form">
 				<div class="form-group">
@@ -69,19 +77,35 @@
 
 <!-- template that displays several website items -->
 <template name="website_list">
-	<ol>
-	{{#each websites}}
-	{{>website_item}}
-	{{/each}}
-	</ol>
+	<div class="row">
+		<ol>
+		{{#each websites}}
+			<div class="col-md-6 col-xs-12">
+			{{>website_item}}
+			</div>
+		{{/each}}
+		</ol>
+	</div>
 </template>
 
 <!-- template that displays individual website entries -->
 <template name="website_item">
+
+<h2>
+   {{#if filtering_images}}
+    Showing images by user {{getFilterUser}}. <a href="#" class="js-unset-image-filter">Show all images</a>
+   {{/if}}
+</h2>
 <li>
-	<a href="{{url}}">{{title}}</a>
+	<h4><a href="{{url}}">{{title}}</a></h4>
 	<p>
 		{{description}}
+	</p>
+	<p>
+		User: <a href="#">{{getUser createdBy}}</a>
+	</p>
+	<p>
+		Posted: {{createdOn}}
 	</p>
 	<a href="#" class="btn btn-success js-upvote">
 		<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
@@ -89,11 +113,10 @@
 	<a href="#" class="btn btn-danger js-downvote">
 		<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
 	</a>
-	<!-- you will be putting your up and down vote buttons in here! -->
-</li>
+</li><br>
 </template>
 
 <template name="detail">
-	<h2>{{titulo}}</h2>
+	<h2>{{tittle}}</h2>
 	
 </template>

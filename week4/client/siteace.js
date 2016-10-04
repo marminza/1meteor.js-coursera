@@ -43,6 +43,19 @@
 
 
 	/////
+	//Config
+	/////
+
+
+	// accounts config
+	Accounts.ui.config({
+	passwordSignupFields: "USERNAME_AND_EMAIL"
+	});
+
+
+
+
+	/////
 	// template helpers 
 	/////
 
@@ -50,7 +63,7 @@
 	Template.body.helpers({
 		username:function(){
 			if (Meteor.user()) {
-				return Meteor.user().emails[0].address;
+				return Meteor.user().username;
 			}
 			else{
 				return "Anonymous"
@@ -59,15 +72,18 @@
 	});
 
 	// helper function that returns IF user is logged
-	Template.body.helpers({
-		currentUser:function(){
-			if (Meteor.user()) {
-				return true;
-			}
-			else{return false;} //Check with videos
+	Template.website_item.helpers({
+		getUser:function(user_id){
+		  	var user = Meteor.users.findOne({_id:user_id});
+		  	if (user){
+		    	return user.username;
+		  	}
+		  	else {
+		    	return "Anonymous";
+		  	}
 		}
 	});
-
+	
 	// helper function that returns all available websites
 	Template.website_list.helpers({
 		websites:function(){
@@ -82,11 +98,12 @@
 
 	Template.website_item.events({
 		"click .js-upvote":function(event){
-			// example of how you can access the id for the website in the database
-			// (this is the data context for the template)
 			var website_id = this._id;
+			var old_rating=15;
 			console.log("Up voting website with id "+website_id);
-			// put the code in here to add a vote to a website!
+			Websites.update({_id:website_id},
+							{$set: {rating:old_rating+1}});
+			//console.log("Result voting is: "+rating);
 
 			return false;// prevent the button from reloading the page
 		}, 
@@ -108,21 +125,23 @@
 			$("#website_form").toggle('slow');
 		}, 
 		"submit .js-save-website-form":function(event){
-
-			// here is an example of how to get the url out of the form:
 			var url = event.target.url.value;
 			var title = event.target.title.value;
 			var descrip = event.target.description.value;
-			
-			Websites.insert({
-	    		title: title, 
-	    		url: url, 
-	    		description: descrip, 
-	    		createdOn:new Date()
-	    	});	
+			if (Meteor.user()) {
+				Websites.insert({
+		    		title: title, 
+		    		url: url, 
+		    		description: descrip, 
+		    		createdOn:new Date(),
+		    		createdBy:Meteor.user()._id
+		    		//upvotes:0;
+		    	});
+		    };
+
+			$("#website_form").toggle('slow'); // NO FUNCIONA
 
 			return false;// stop the form submit from reloading the page
-
 		}
 	});
 
